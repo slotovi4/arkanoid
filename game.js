@@ -65,13 +65,13 @@ const game = {
 };
 
 game.ball = {
-  x: 320,
-  y: 276
+  x: 308,
+  y: 296
 };
 
 game.platform = {
-  x: 280,
-  y: 300
+  x: 270,
+  y: 320
 };
 
 window.addEventListener('load', () => {
