@@ -1,14 +1,41 @@
 const game = {
-  start() {
+  ctx: null,
+  sprites: {
+    bg: null,
+    ball: null,
+    platform: null
+  },
+
+  init() {
     this.ctx = document.getElementById('game').getContext('2d');
+  },
+  preload(callback) {
+    let loaded = 0;
+    let required = Object.keys(this.sprites).length;
 
-    const bg = new Image();
-    bg.src = 'img/bg.jpg';
-
-    bg.onload = () =>
-      window.requestAnimationFrame(() => {
-        this.ctx.drawImage(bg, 0, 0);
-      });
+    for (let key in this.sprites) {
+      this.sprites[key] = new Image();
+      this.sprites[key].src = `img/${key}.png`;
+      this.sprites[key].onerror = () => required--;
+      this.sprites[key].onload = () => {
+        loaded++;
+        if (loaded >= required) callback();
+      };
+    }
+  },
+  run() {
+    window.requestAnimationFrame(() => {
+      this.render();
+    });
+  },
+  render() {
+    this.ctx.drawImage(this.sprites.bg, 0, 0);
+    this.ctx.drawImage(this.sprites.ball, 0, 0);
+    this.ctx.drawImage(this.sprites.platform, 0, 0);
+  },
+  start() {
+    this.init();
+    this.preload(() => this.run());
   }
 };
 
