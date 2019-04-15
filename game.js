@@ -150,10 +150,12 @@ game.ball = {
     block.active = false;
   },
   bumpPlatform(platform) {
-    const touchX = this.x + this.width / 2;
+    if (this.dy > 0) {
+      const touchX = this.x + this.width / 2;
 
-    this.dy *= -1;
-    this.dx = this.velocity * platform.getTouchOffset(touchX);
+      this.dy = -this.velocity;
+      this.dx = this.velocity * platform.getTouchOffset(touchX);
+    }
   }
 };
 
