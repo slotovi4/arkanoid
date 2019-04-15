@@ -66,11 +66,19 @@ const game = {
   update() {
     this.platform.move();
     this.ball.move();
-
+    this.collideBlocks();
+    this.collidePlatform();
+  },
+  collideBlocks() {
     for (let block of this.blocks) {
       if (this.ball.collide(block)) {
         this.ball.bumpBlock(block);
       }
+    }
+  },
+  collidePlatform() {
+    if (this.ball.collide(this.platform)) {
+      this.ball.bumpPlatform(this.platform);
     }
   },
   run() {
@@ -109,7 +117,7 @@ game.ball = {
   dx: 0,
   dy: 0,
   x: 308,
-  y: 296,
+  y: 295,
   width: 25,
   height: 25,
   start() {
@@ -121,8 +129,8 @@ game.ball = {
     if (this.dx) this.x += this.dx;
   },
   collide(element) {
-    let x = this.x + this.dx;
-    let y = this.y + this.dy;
+    const x = this.x + this.dx;
+    const y = this.y + this.dy;
 
     if (
       x + this.width > element.x &&
@@ -136,6 +144,12 @@ game.ball = {
   },
   bumpBlock(block) {
     this.dy *= -1;
+  },
+  bumpPlatform(platform) {
+    const touchX = this.x + this.width / 2;
+
+    this.dy *= -1;
+    this.dx = this.velocity * platform.getTouchOffset(touchX);
   }
 };
 
@@ -144,6 +158,8 @@ game.platform = {
   dx: 0,
   x: 270,
   y: 320,
+  width: 100,
+  height: 14,
   ball: game.ball,
   fire() {
     if (this.ball) {
@@ -166,6 +182,13 @@ game.platform = {
       this.x += this.dx;
       if (this.ball) this.ball.x += this.dx;
     }
+  },
+  getTouchOffset(x) {
+    const diff = this.x + this.width - x;
+    const offset = this.width - diff;
+    const result = (offset * 2) / this.width;
+
+    return result - 1;
   }
 };
 
