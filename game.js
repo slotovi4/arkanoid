@@ -42,7 +42,9 @@ const game = {
       for (let col = 0; col < this.cols; col++) {
         this.blocks.push({
           x: 64 * col + 65,
-          y: 24 * row + 35
+          y: 24 * row + 35,
+          width: 60,
+          height: 20
         });
       }
     }
@@ -64,6 +66,12 @@ const game = {
   update() {
     this.platform.move();
     this.ball.move();
+
+    for (let block of this.blocks) {
+      if (this.ball.collide(block)) {
+        this.ball.bumpBlock(block);
+      }
+    }
   },
   run() {
     window.requestAnimationFrame(() => {
@@ -102,6 +110,8 @@ game.ball = {
   dy: 0,
   x: 308,
   y: 296,
+  width: 25,
+  height: 25,
   start() {
     this.dy = -this.velocity;
     this.dx = game.random(-this.velocity, this.velocity);
@@ -109,6 +119,23 @@ game.ball = {
   move() {
     if (this.dy) this.y += this.dy;
     if (this.dx) this.x += this.dx;
+  },
+  collide(element) {
+    let x = this.x + this.dx;
+    let y = this.y + this.dy;
+
+    if (
+      x + this.width > element.x &&
+      x < element.x + element.width &&
+      y + this.height > element.y &&
+      y < element.y + element.height
+    ) {
+      return true;
+    }
+    return false;
+  },
+  bumpBlock(block) {
+    this.dy *= -1;
   }
 };
 
