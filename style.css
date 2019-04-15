@@ -13,6 +13,7 @@ body {
 }
 
 .Game {
+  position: relative;
 }
 
 .Game-Title {
