@@ -14,6 +14,20 @@ const game = {
 
   init() {
     this.ctx = document.getElementById('game').getContext('2d');
+    this.setEvents();
+  },
+  setEvents() {
+    window.addEventListener('keydown', e => {
+      if (e.keyCode === 37) {
+        this.platform.dx = -this.platform.velocity;
+      } else if (e.keyCode === 39) {
+        this.platform.dx = this.platform.velocity;
+      }
+    });
+
+    window.addEventListener('keyup', e => {
+      this.platform.dx = 0;
+    });
   },
   create() {
     for (let row = 0; row < this.rows; row++) {
@@ -39,9 +53,14 @@ const game = {
       this.sprites[key].onload = onImgLoad;
     }
   },
+  update() {
+    this.platform.move();
+  },
   run() {
     window.requestAnimationFrame(() => {
+      this.update();
       this.render();
+      this.run();
     });
   },
   render() {
@@ -70,8 +89,13 @@ game.ball = {
 };
 
 game.platform = {
+  velocity: 6,
+  dx: 0,
   x: 270,
-  y: 320
+  y: 320,
+  move() {
+    if (this.dx) this.x += this.dx;
+  }
 };
 
 window.addEventListener('load', () => {
