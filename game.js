@@ -130,10 +130,20 @@ const game = {
   render() {
     this.ctx.clearRect(0, 0, this.width, this.height);
     this.ctx.drawImage(this.sprites.bg, 0, 0);
-    this.ctx.drawImage(this.sprites.ball, this.ball.x, this.ball.y);
+    this.ctx.drawImage(
+      this.sprites.ball,
+      this.ball.frame * this.ball.width,
+      0,
+      this.ball.width,
+      this.ball.height,
+      this.ball.x,
+      this.ball.y,
+      this.ball.width,
+      this.ball.height
+    );
     this.ctx.drawImage(this.sprites.platform, this.platform.x, this.platform.y);
     this.renderBlocks();
-    this.ctx.fillText(`Score: ${this.score}`, 15, 20);
+    this.ctx.fillText(`Score: ${this.score}`, 10, 20);
   },
   renderBlocks() {
     for (let block of this.blocks) {
@@ -161,6 +171,7 @@ const game = {
 
 game.ball = {
   velocity: 3,
+  frame: 0,
   dx: 0,
   dy: 0,
   x: 308,
@@ -170,6 +181,15 @@ game.ball = {
   start() {
     this.dy = -this.velocity;
     this.dx = game.random(-this.velocity, this.velocity);
+    this.animate();
+  },
+  animate() {
+    setInterval(() => {
+      ++this.frame;
+      if (this.frame > 3) {
+        this.frame = 0;
+      }
+    }, 100);
   },
   move() {
     if (this.dy) this.y += this.dy;
