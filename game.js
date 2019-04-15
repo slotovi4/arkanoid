@@ -1,6 +1,7 @@
 const KEYS = {
   LEFT: 37,
-  RIGHT: 39
+  RIGHT: 39,
+  SPACE: 32
 };
 
 const game = {
@@ -23,7 +24,9 @@ const game = {
   },
   setEvents() {
     window.addEventListener('keydown', e => {
-      if (e.keyCode === KEYS.LEFT || e.keyCode === KEYS.RIGHT) {
+      if (e.keyCode === KEYS.SPACE) {
+        this.platform.fire();
+      } else if (e.keyCode === KEYS.LEFT || e.keyCode === KEYS.RIGHT) {
         this.platform.start(e.keyCode);
       }
     });
@@ -58,6 +61,7 @@ const game = {
   },
   update() {
     this.platform.move();
+    this.ball.move();
   },
   run() {
     window.requestAnimationFrame(() => {
@@ -87,8 +91,16 @@ const game = {
 };
 
 game.ball = {
+  velocity: 6,
+  dy: 0,
   x: 308,
-  y: 296
+  y: 296,
+  start() {
+    this.dy = -this.velocity;
+  },
+  move() {
+    if (this.dy) this.y += this.dy;
+  }
 };
 
 game.platform = {
@@ -96,6 +108,13 @@ game.platform = {
   dx: 0,
   x: 270,
   y: 320,
+  ball: game.ball,
+  fire() {
+    if (this.ball) {
+      this.ball.start();
+      this.ball = null;
+    }
+  },
   start(direction) {
     if (direction === KEYS.LEFT) {
       this.dx = -this.velocity;
@@ -109,7 +128,7 @@ game.platform = {
   move() {
     if (this.dx) {
       this.x += this.dx;
-      game.ball.x += this.dx;
+      if (this.ball) this.ball.x += this.dx;
     }
   }
 };
