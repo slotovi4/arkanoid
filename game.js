@@ -11,6 +11,8 @@ const game = {
   blocks: [],
   rows: 4,
   cols: 8,
+  width: 640,
+  height: 395,
   sprites: {
     bg: null,
     ball: null,
@@ -71,6 +73,7 @@ const game = {
     });
   },
   render() {
+    this.ctx.clearRect(0, 0, this.width, this.height);
     this.ctx.drawImage(this.sprites.bg, 0, 0);
     this.ctx.drawImage(this.sprites.ball, this.ball.x, this.ball.y);
     this.ctx.drawImage(this.sprites.platform, this.platform.x, this.platform.y);
@@ -87,19 +90,25 @@ const game = {
       this.create();
       this.run();
     });
+  },
+  random(min, max) {
+    return Math.floor(Math.random() * (max - min + 1) + min);
   }
 };
 
 game.ball = {
-  velocity: 6,
+  velocity: 3,
+  dx: 0,
   dy: 0,
   x: 308,
   y: 296,
   start() {
     this.dy = -this.velocity;
+    this.dx = game.random(-this.velocity, this.velocity);
   },
   move() {
     if (this.dy) this.y += this.dy;
+    if (this.dx) this.x += this.dx;
   }
 };
 
