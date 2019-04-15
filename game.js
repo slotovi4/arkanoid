@@ -65,10 +65,11 @@ const game = {
     }
   },
   update() {
-    this.platform.move();
-    this.ball.move();
     this.collideBlocks();
     this.collidePlatform();
+    this.ball.collideWorldBounds();
+    this.platform.move();
+    this.ball.move();
   },
   collideBlocks() {
     for (let block of this.blocks) {
@@ -144,6 +145,33 @@ game.ball = {
       return true;
     }
     return false;
+  },
+  collideWorldBounds() {
+    const x = this.x + this.dx;
+    const y = this.y + this.dy;
+
+    const ballBottom = y + this.height;
+    const ballRight = x + this.width;
+    const ballLeft = x;
+    const ballTop = y;
+
+    const worldLeft = 0;
+    const worldTop = 0;
+    const worldRight = game.width;
+    const worldBottom = game.height;
+
+    if (ballLeft < worldLeft) {
+      this.x = 0;
+      this.dx = this.velocity;
+    } else if (ballRight > worldRight) {
+      this.x = worldRight - this.width;
+      this.dx = -this.velocity;
+    } else if (ballTop < worldTop) {
+      this.y = 0;
+      this.dy = this.velocity;
+    } else if (ballBottom > worldBottom) {
+      console.log('game end');
+    }
   },
   bumpBlock(block) {
     this.dy *= -1;
