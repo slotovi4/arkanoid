@@ -68,6 +68,7 @@ const game = {
     this.collideBlocks();
     this.collidePlatform();
     this.ball.collideWorldBounds();
+    this.platform.collideWorldBounds();
     this.platform.move();
     this.ball.move();
   },
@@ -178,6 +179,9 @@ game.ball = {
     block.active = false;
   },
   bumpPlatform(platform) {
+    if (platform.dx) {
+      this.x += platform.dx;
+    }
     if (this.dy > 0) {
       const touchX = this.x + this.width / 2;
 
@@ -223,6 +227,17 @@ game.platform = {
     const result = (offset * 2) / this.width;
 
     return result - 1;
+  },
+  collideWorldBounds() {
+    const x = this.x + this.dx;
+    const platformLeft = x;
+    const platformRight = platformLeft + this.width;
+    const worldLeft = 0;
+    const worldRight = game.width;
+
+    if (platformLeft < worldLeft || platformRight > worldRight) {
+      this.dx = 0;
+    }
   }
 };
 
