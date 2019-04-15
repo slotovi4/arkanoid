@@ -27,7 +27,12 @@ const game = {
 
   init() {
     this.ctx = document.getElementById('game').getContext('2d');
+    this.setTextFont();
     this.setEvents();
+  },
+  setTextFont() {
+    this.ctx.fillStyle = '#ffffff';
+    this.ctx.font = '16px Arial';
   },
   setEvents() {
     window.addEventListener('keydown', e => {
@@ -128,6 +133,7 @@ const game = {
     this.ctx.drawImage(this.sprites.ball, this.ball.x, this.ball.y);
     this.ctx.drawImage(this.sprites.platform, this.platform.x, this.platform.y);
     this.renderBlocks();
+    this.ctx.fillText(`Score: ${this.score}`, 15, 20);
   },
   renderBlocks() {
     for (let block of this.blocks) {
