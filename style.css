@@ -23,3 +23,7 @@ body {
   display: flex;
   justify-content: center;
 }
+
+.Game-Info {
+  text-align: center;
+}
